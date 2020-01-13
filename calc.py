@@ -19,7 +19,7 @@ def buddha_calc(a, b):
     c = complex(a, b)
     z = c
     ls = []
-    for i in range(MaxDepth):
+    for _ in range(MaxDepth):
         if abs(z) >= 2:
             return ls
         ls.append(z)

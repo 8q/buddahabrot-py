@@ -5,10 +5,10 @@ from tqdm import tqdm
 import multiprocessing as mp
 
 
-H, W = 2000, 2000
+H, W = 1000, 1000
 MaxDepth = 1000
-IterationsPerThread = 200000
-Threads = 500000
+IterationsPerThread = 150000
+Threads = 20000
 
 
 def mapv(v, s1, e1, s2, e2):

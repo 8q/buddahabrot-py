@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
+import argparse
 import numpy as np
 from tqdm import tqdm
 import multiprocessing as mp
 
-
-H, W = 1000, 1000
+# https://en.wikipedia.org/wiki/Buddhabrot
+H, W = 700, 700
 MaxDepth = 1000
-IterationsPerThread = 150000
-Threads = 20000
+IterationsPerThread = 30000
+Threads = 1000
 
 
 def mapv(v, s1, e1, s2, e2):
@@ -27,31 +28,32 @@ def buddha_calc(a, b):
     return []
 
 
-def paralell_task(_id):
+def parallel_task(_id):
     s = np.zeros((H, W), dtype=int)
     for _ in range(IterationsPerThread):
         h, w = np.random.rand() * H, np.random.rand() * W
         a, b = mapv(h, 0, H, -2, 2), mapv(w, 0, W, -2, 2)
         ls = buddha_calc(a, b)
         for c in ls:
-            y, x = int(np.floor(mapv(c.imag, -2, 2, 0, H))
-                       ), int(np.floor(mapv(c.real, -2, 2, 0, W)))
+            y, x = int(np.floor(mapv(c.imag, -2, 2, 0, H))), int(np.floor(mapv(c.real, -2, 2, 0, W)))
             s[y][x] = s[y][x] + 1
     return s
 
 
-def buddhabrot_multi():
-    worker_processes = max(mp.cpu_count() * 3 // 4, 1)
-    p = mp.Pool(worker_processes)
+def buddhabrot_multi(processes):
+    p = mp.Pool(processes)
     screen = np.zeros((H, W), dtype=int)
     with tqdm(total=Threads) as t:
-        for res in p.imap_unordered(paralell_task, [i for i in range(Threads)]):
+        for res in p.imap_unordered(parallel_task, [i for i in range(Threads)]):
             screen = np.add(screen, res)
             t.update()
     return screen
 
 
 if __name__ == '__main__':
-    screen = buddhabrot_multi().tolist()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("processes", help="number of cpu to use for calculation", default=2, type=int)
+    args = parser.parse_args()
+    screen = buddhabrot_multi(args.processes).tolist()
     for line in screen:
         print(','.join(map(str, line)))

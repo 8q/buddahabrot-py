@@ -3,6 +3,7 @@
 import sys
 from PIL import Image
 import numpy as np
+import argparse
 
 
 def mapv(v, s1, e1, s2, e2):
@@ -10,11 +11,11 @@ def mapv(v, s1, e1, s2, e2):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) <= 1 or len(sys.argv[1]) <= 0:
-        print('usage: ./draw.py out.png < out.txt')
-        exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("outfile", help="ex) out.png")
+    args = parser.parse_args()
 
-    filename = sys.argv[1]
+    filename = args.outfile
     screen = []
     min_n, max_n = sys.maxsize, 0
     for line in sys.stdin:

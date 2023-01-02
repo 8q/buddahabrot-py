@@ -24,7 +24,7 @@ options:
 $ pipenv sync
 $ pipenv shell
 $ ./calc.py 8 > out.txt
-$ ./draw.py out_20.png < out.txt
+$ ./draw.py out.png < out.txt
 ```
 
 #### MaxDepth=20
